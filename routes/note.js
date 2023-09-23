@@ -1,6 +1,6 @@
-const express = require('express')
-const router = express.Router()
-const moment = require('moment')
+const express = require('express');
+const router = express.Router();
+const moment = require('moment');
 
 let knex = require('../knex');
 let notes;
