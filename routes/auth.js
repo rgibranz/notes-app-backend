@@ -24,6 +24,8 @@ router.post("/login", async (req, res) => {
 });
 
 router.post("/registration", async (req, res) => {
+  // TODO : validation
+  // TODO : check email is used or not
   await knex("users").insert({
     name: req.body.name,
     email: req.body.email,

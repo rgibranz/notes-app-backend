@@ -27,6 +27,7 @@ router.get("/:id", async (req, res) => {
 });
 
 router.post("/", async (req, res) => {
+  // TODO : create validation
   let data = {
     title: req.body.title,
     content: req.body.content,
@@ -39,6 +40,7 @@ router.post("/", async (req, res) => {
 });
 
 router.put("/:id", async (req, res) => {
+  // TODO : create validation
   let data = {
     title: req.body.title,
     content: req.body.content,
