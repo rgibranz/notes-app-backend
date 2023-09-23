@@ -16,9 +16,21 @@ router.post("/login", async (req, res) => {
     res.status(401).json({ error: "data not found" });
   }
 
-  const token = jwt.sign({email:user.email},'GibranRahmat',{expiresIn:'24h'});
+  const token = jwt.sign({ email: user.email }, "GibranRahmat", {
+    expiresIn: "24h",
+  });
 
-  res.json({token});
+  res.json({ token });
+});
+
+router.post("/registration", async (req, res) => {
+  await knex("users").insert({
+    name: req.body.name,
+    email: req.body.email,
+    password: bcrypt.hashSync(req.body.password, 10),
+  });
+
+  res.json({message:'you are registered'})
 });
 
 module.exports = router;
