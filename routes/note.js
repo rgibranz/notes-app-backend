@@ -1,51 +1,68 @@
-const express = require('express');
+const express = require("express");
 const router = express.Router();
-const moment = require('moment');
+const moment = require("moment");
 
-let knex = require('../knex');
+let knex = require("../knex");
 let notes;
 
-router.get('/', async (req, res) => {
-  notes = await knex('notes');
+router.get("/", async (req, res) => {
+  notes = await knex("notes").where("user_id", req.userData.id);
   res.json(notes);
 });
 
-router.get('/:id', async (req, res) => {
-  notes = await knex('notes').where('id', req.params.id).first();
+router.get("/:id", async (req, res) => {
+  notes = await knex("notes")
+    .where({
+      id: req.params.id,
+      user_id: req.userData.id,
+    })
+    .first();
 
   if (notes === undefined) {
     res.status(404);
-    res.json({'message': "data not found"});
+    res.json({ message: "data not found" });
   }
 
   res.json(notes);
 });
 
-router.post('/', async (req, res) => {
+router.post("/", async (req, res) => {
   let data = {
     title: req.body.title,
     content: req.body.content,
-    created_at: moment().format('Y-M-d HH:m:s')
-  }
+    user_id: req.userData.id,
+    created_at: moment().format("Y-M-d HH:m:s"),
+  };
 
-  notes = await knex('notes').insert(data);
+  notes = await knex("notes").insert(data);
   res.json(notes).status(201);
 });
 
-router.put('/:id', async (req, res) => {
+router.put("/:id", async (req, res) => {
   let data = {
     title: req.body.title,
     content: req.body.content,
-    updated_at: moment().format('Y-M-d HH:m:s')
-  }
+    updated_at: moment().format("Y-M-d HH:m:s"),
+  };
 
-  notes = await knex('notes').where('id', req.params.id).update(data);
-  res.json({'message': 'data updated'}).status(201);
+  notes = await knex("notes")
+    .where({
+      id: req.params.id,
+      user_id: req.userData.id,
+    })
+    .update(data);
+  res.json({ message: "data updated" }).status(201);
 });
 
-router.delete('/:id', (req, res) => {
-  knex('notes').where('id', req.params.id).delete();
-  res.json({'message': 'data deleted'});
+router.delete("/:id",async (req, res) => {
+  await knex("notes")
+    .where({
+      id: req.params.id,
+      user_id: req.userData.id,
+    })
+    .delete();
+
+  res.json({ message: "data deleted" });
 });
 
-module.exports = router
+module.exports = router;
