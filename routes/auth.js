@@ -4,8 +4,20 @@ const router = express.Router();
 const knex = require("../knex");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
+const { body, validationResult } = require('express-validator');
 
-router.post("/login", async (req, res) => {
+const loginValidation = [
+  body('email').isEmail(),
+  body('password').notEmpty(),
+];
+
+router.post("/login", loginValidation, async (req, res) => {
+  // Periksa apakah ada kesalahan validasi
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    return res.status(400).json({ error: errors.array() });
+  }
+
   let user = await knex("users").where("email", req.body.email).first();
 
   if (!user) {
@@ -23,14 +35,24 @@ router.post("/login", async (req, res) => {
   res.json({ token });
 });
 
-router.post("/registration", async (req, res) => {
-  // TODO : validation
+const registrationValidation = [
+  body('name').notEmpty().withMessage('Name is required'),
+  body('email').isEmail().withMessage('Invalid email address'),
+  body('password').isLength({ min: 3 }).withMessage('Password must be at least 3 characters long'),
+];
+
+router.post("/registration",registrationValidation, async (req, res) => {
+  // Periksa apakah ada kesalahan validasi
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    return res.status(400).json({ errors: errors.array() });
+  }
 
   // check if email used or not
   let isUsed = await knex("users").where({email:req.body.email}).count();
 
   if(isUsed != 0){
-    res.status(409).json({message:"email is used"});
+    res.status(409).json({error:"email is used"});
     return;
   }
 

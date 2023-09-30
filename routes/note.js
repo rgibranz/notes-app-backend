@@ -18,7 +18,7 @@ router.get("/:id", async (req, res) => {
     })
     .first();
 
-  if (notes === undefined) {
+  if (!notes) {
     res.status(404);
     res.json({ message: "data not found" });
   }
