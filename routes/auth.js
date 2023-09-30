@@ -28,7 +28,7 @@ router.post("/login", loginValidation, async (req, res) => {
     res.status(401).json({ error: "data not found" });
   }
 
-  const token = jwt.sign({ email: user.email }, "GibranRahmat", {
+  const token = jwt.sign({ email: user.email }, process.env.JWT_SECRET_KEY, {
     expiresIn: "24h",
   });
 

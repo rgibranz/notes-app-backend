@@ -6,7 +6,7 @@ exports.up = function (knex) {
   return knex.schema.createTable('notes', function (table) {
     table.increments();
     table.string('title');
-    table.text('content');
+    table.text('content').nullable();
     table.integer('user_id').unsigned();
     table.foreign('user_id').references('notes.id').onUpdate('CASCADE').onDelete('CASCADE');
     table.timestamps();

@@ -6,7 +6,7 @@ async function authenticate(req, res, next) {
 
   if (token) {
     try {
-      const decode = jwt.verify(token, "GibranRahmat");
+      const decode = jwt.verify(token, process.env.JWT_SECRET_KEY);
       const user = await knex('users').where('email',decode.email).first();
       req.userData = user;
     } catch (error) {
