@@ -25,14 +25,23 @@ router.post("/login", async (req, res) => {
 
 router.post("/registration", async (req, res) => {
   // TODO : validation
-  // TODO : check email is used or not
+
+  // check if email used or not
+  let isUsed = await knex("users").where({email:req.body.email}).count();
+
+  if(isUsed != 0){
+    res.status(409).json({message:"email is used"});
+    return;
+  }
+
+  // if not save new user
   await knex("users").insert({
     name: req.body.name,
     email: req.body.email,
     password: bcrypt.hashSync(req.body.password, 10),
   });
 
-  res.json({message:'you are registered'})
+  res.status(201).json({message:'you are registered'})
 });
 
 module.exports = router;
