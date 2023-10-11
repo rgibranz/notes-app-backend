@@ -11,9 +11,11 @@ async function authenticate(req, res, next) {
       req.userData = user;
     } catch (error) {
       res.status(401).json({message:'Not Valid'})
+      return false;
     }
   } else {
     res.status(401).json({ message: "Not Login" });
+    return false;
   }
 
   next();
