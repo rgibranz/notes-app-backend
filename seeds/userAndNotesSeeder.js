@@ -9,8 +9,8 @@ exports.seed = async (knex) => {
   for (let i = 0; i < 15; i++) {
     let user = await knex("users").insert([
       {
-        name: faker.person.fullName(),
-        email: faker.internet.email(),
+        name: "User " + i,
+        email: `user${i}@gmail.com`,
         password: await bcrypt.hash("ada", 10),
       },
     ]);
