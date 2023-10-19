@@ -8,6 +8,7 @@ let notes;
 router.get("/", async (req, res, next) => {
   try {
     notes = await knex("notes").where("user_id", req.userData.id);
+    console.log(notes.toString());
     res.json(notes);
   } catch (error) {
     next(error);
@@ -28,6 +29,7 @@ router.get("/:id", async (req, res, next) => {
       res.json({ message: "data not found" });
     }
 
+    console.log(notes.toString());
     res.json(notes);
   } catch (error) {
     next(error);
@@ -45,6 +47,7 @@ router.post("/", async (req, res, next) => {
     };
 
     notes = await knex("notes").insert(data);
+    console.log(notes.toString());
     res.json(notes).status(201);
   } catch (error) {
     next(error);
@@ -66,6 +69,7 @@ router.put("/:id", async (req, res, next) => {
         user_id: req.userData.id,
       })
       .update(data);
+    console.log(notes.toString());
     res.json({ message: "data updated" }).status(201);
   } catch (error) {
     next(error);
@@ -74,13 +78,14 @@ router.put("/:id", async (req, res, next) => {
 
 router.delete("/:id", async (req, res, next) => {
   try {
-    await knex("notes")
+    notes = await knex("notes")
       .where({
         id: req.params.id,
         user_id: req.userData.id,
       })
       .delete();
 
+    console.log(notes.toString());
     res.json({ message: "data deleted" });
   } catch (error) {
     next(error);

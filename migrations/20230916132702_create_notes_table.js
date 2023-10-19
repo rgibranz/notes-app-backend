@@ -8,7 +8,7 @@ exports.up = function (knex) {
     table.string('title');
     table.text('content').nullable();
     table.integer('user_id').unsigned();
-    table.foreign('user_id').references('notes.id').onUpdate('CASCADE').onDelete('CASCADE');
+    table.foreign('user_id').references('users.id').onUpdate('CASCADE').onDelete('CASCADE');
     table.timestamps();
   })
 };

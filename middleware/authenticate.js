@@ -1,5 +1,5 @@
 const jwt = require("jsonwebtoken");
-const knex = require('../knex');
+const knex = require("../knex");
 
 async function authenticate(req, res, next) {
   const token = req.header("Authorization");
@@ -7,14 +7,14 @@ async function authenticate(req, res, next) {
   if (token) {
     try {
       const decode = jwt.verify(token, process.env.JWT_SECRET_KEY);
-      const user = await knex('users').where('email',decode.email).first();
+      const user = await knex("users").where("email", decode.email).first();
       req.userData = user;
     } catch (error) {
-      res.status(401).json({message:'Not Valid'})
+      res.status(401).json({ message: "Not Valid" });
       return false;
     }
   } else {
-    res.status(401).json({ message: "Not Login" });
+    res.status(401).json({ message: "Not Login", dataReq: req.header('Authorization') });
     return false;
   }
 
