@@ -53,9 +53,9 @@ router.post("/registration", registrationValidation, async (req, res) => {
   }
 
   // check if email used or not
-  let isUsed = await knex("users").where({ email: req.body.email }).count();
-
-  if (isUsed != 0) {
+  let isUsed = await knex("users").where({ email: req.body.email });
+  
+  if (isUsed.length != 0) {
     res.status(409).json({ error: "email is used" });
     return;
   }
